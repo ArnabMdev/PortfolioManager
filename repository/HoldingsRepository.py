@@ -28,7 +28,7 @@ class HoldingsRepository:
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute('SELECT * FROM HOLDINGS WHERE asset_id = %s',asset_id)
+            cursor.execute('SELECT * FROM HOLDINGS WHERE asset_id = %s',(asset_id,))
             result = cursor.fetchone()
             cursor.close()
             conn.close()
@@ -69,8 +69,8 @@ class HoldingsRepository:
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            updatestmnt = 'UPDATE HOLDINGS SET ticker = %s, asset_type = %s, qty = %s, avg_price = %s WHERE asset_id = %s' 
-            data = (holding.ticker, holding.asset_type, holding.qty, holding.avg_price)
+            updatestmnt = 'UPDATE HOLDINGS SET ticker = %s, asset_type = %s, qty = %s, avg_price = %s WHERE asset_id = %s'
+            data = (holding.ticker, holding.asset_type, holding.qty, holding.avg_price, holding.asset_id)
             cursor.execute(updatestmnt, data)
             conn.commit()
             affected_rows = cursor.rowcount
@@ -89,8 +89,8 @@ class HoldingsRepository:
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute('DELETE FROM HOLDINGS WHERE asset_id = %s',asset_id)
-            affected_rows = cursor.rowcount()
+            cursor.execute('DELETE FROM HOLDINGS WHERE asset_id = %s',(asset_id,))
+            affected_rows = cursor.rowcount
             conn.commit()
             cursor.close()
             conn.close()
@@ -106,5 +106,6 @@ class HoldingsRepository:
          
             
 if __name__ == '__main__':
+    hold = Holding(2,'GOOGLE','stock',1,100)
+    print(HoldingsRepository.deleteHolding(2))
     print(HoldingsRepository.getAllHoldings())
-    print(HoldingsRepository.getHolding(1))
