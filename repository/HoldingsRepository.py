@@ -12,10 +12,10 @@ class HoldingsRepository:
             cursor = conn.cursor()
             cursor.execute('SELECT * FROM HOLDINGS')
             result = cursor.fetchall()
-            # holdings = [Holding(*item).to_dict() for item in result]
+            holdings = [Holding(*item).to_dict() for item in result]
             cursor.close()
             conn.close()
-            return holdings
+            return len(holdings)
             
         except Error as error:
             conn.close()
