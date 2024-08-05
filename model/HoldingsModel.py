@@ -1,6 +1,7 @@
 class Holding:
-    def __init__(self,asset_id, ticker="", asset_type="", qty=0,avg_price=0):
+    def __init__(self,asset_id, user_id="user1", ticker="", asset_type="", qty=0,avg_price=0):
         self.__asset_id = asset_id
+        self.__user_id = user_id
         self.__ticker = ticker
         self.__asset_type = asset_type
         self.__qty = qty
@@ -9,6 +10,10 @@ class Holding:
     @property
     def asset_id(self):
         return self.__asset_id
+    
+    @property
+    def user_id(self):
+        return self.__user_id
     
     @property
     def ticker(self):
@@ -54,7 +59,8 @@ class Holding:
             "qty" : self.__qty,
             "avg_price" : self.__avg_price
             }
-        
+    
+    @staticmethod
     def to_object(data):
         return Holding(**data)
         
