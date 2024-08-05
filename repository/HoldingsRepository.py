@@ -15,7 +15,7 @@ class HoldingsRepository:
             holdings = [Holding(*item).to_dict() for item in result]
             cursor.close()
             conn.close()
-            return len(holdings)
+            return holdings
             
         except Error as error:
             conn.close()
