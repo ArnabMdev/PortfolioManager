@@ -1,32 +1,67 @@
+import datetime
+
 import yfinance as yf
 import pandas as pd
 from requests import Session
 from requests_cache import CacheMixin, SQLiteCache
 from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
 from pyrate_limiter import Duration, RequestRate, Limiter
+
+from model.PriceDataModel import PriceData
+
+
 class CachedLimiterSession(CacheMixin, LimiterMixin, Session):
     pass
 
+
 session = CachedLimiterSession(
-    limiter=Limiter(RequestRate(2, Duration.SECOND*5)),  # max 2 requests per 5 seconds
+    limiter=Limiter(RequestRate(2, Duration.SECOND * 5)),  # max 2 requests per 5 seconds
     bucket_class=MemoryQueueBucket,
-    backend=SQLiteCache("yfinance.cache"),
+    backend=SQLiteCache("../yfinance.cache"),
 )
 
-def getNSEStocks(start:int, end:int, period:str):
+
+def get_nse_stock_list(start: int, end: int):
+    tickers = pd.read_csv('../data/StocksTraded.csv',index_col=1)['Symbol']
+    print(tickers)
+    ticker_list = []
+    # for i in range(start, end, 1):
+        # ticker_list = tickers[i] + ".NS"
+    return ticker_list
+
+
+def get_nse_stock_data(start: int, end: int):
     try:
-        tickers = pd.read_html('https://ournifty.com/stock-list-in-nse-fo-futures-and-options.html#:~:text=NSE%20F%26O%20Stock%20List%3A%20%20%20%20SL,%20%201000%20%2052%20more%20rows%20')[0]
-        tickers = tickers.SYMBOL.to_list()
-        for i in range(len(tickers)):
-            tickers[i] = tickers[i] + ".NS"
-        price_data = yf.Tickers(tickers[20:25] ,session=session)
-        # print(price_data.tickers)
-        for k,v in price_data.tickers.items():
-            print(k + ' ' + str(v.info['currentPrice']))
+        tickers = get_nse_stock_list(start, end)
+        raw_price_data = yf.Tickers(tickers[start:end], session=session)
+        price_datas = []
+        for k, v in raw_price_data.tickers.items():
+            if k is None or v is None:
+                continue
+            price_data = PriceData(
+                str(k),
+                v.info['open'],
+                v.info['close'],
+                {
+                    'dayHigh': v.info['dayHigh'],
+                    'regularMarketDayHigh': v.info['regularMarketDayHigh'],
+                    'fiftyTwoWeekHigh': v.info['fiftyTwoWeekHigh']
+                },
+                {
+                    'dayLow': v.info['dayLow'],
+                    'regularMarketDayLow': v.info['regularMarketDayLow'],
+                    'fiftyTwoWeekLow': v.info['fiftyTwoWeekLow']
+                },
+                v.info['volume'],
+                v.info['current_price'],
+                datetime.datetime.now()
+            )
+            price_datas.append(price_data)
+        return price_datas
     except Exception as err:
         print(err)
         return {}
-        
-    
+
+
 if __name__ == '__main__':
-    getNSEStocks(0,25,"5d")
+    get_nse_stock_list(0, 25)
