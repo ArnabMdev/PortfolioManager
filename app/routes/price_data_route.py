@@ -1,37 +1,24 @@
 from flask import Blueprint, jsonify, request
 from app.services.price_data_service import PriceDataService
+import pandas as pd
 
 bp = Blueprint('price_data', __name__, url_prefix='/api/price_data')
 price_data_service = PriceDataService()
 
-@bp.route('', methods=['GET'])
-def get_price_data():
-    users = price_data_service.get_nse_stock_data()
-    return jsonify([user.to_dict() for user in users])
 
-@bp.route('/<int:id>', methods=['GET'])
-def get_user(id):
-    user = price_data_service.get_user_by_id(id)
-    if user:
-        return jsonify(user.to_dict())
-    return jsonify({'error': 'User not found'}), 404
+@bp.route('/', methods=['GET'])
+def get_default_price_data():
+    try:
+        price_datas = price_data_service.get_nse_stock_data(0,26)
+        if len(price_datas) > 0:
+            return jsonify([{k:v.to_dict()} for k,v in price_datas.items()])
+        return jsonify({'error': 'failed to fetch stock data'}), 404
+    except FileNotFoundError:
+            return "CSV file not found"
 
-@bp.route('', methods=['POST'])
-def create_user():
-    data = request.json
-    new_user = price_data_service.create_user(data)
-    return jsonify(new_user.to_dict()), 201
-
-@bp.route('/<int:id>', methods=['PUT'])
-def update_user(id):
-    data = request.json
-    updated_user = price_data_service.update_user(id, data)
-    if updated_user:
-        return jsonify(updated_user.to_dict())
-    return jsonify({'error': 'User not found'}), 404
-
-@bp.route('/<int:id>', methods=['DELETE'])
-def delete_user(id):
-    if price_data_service.delete_user(id):
-        return '', 204
-    return jsonify({'error': 'User not found'}), 404
+@bp.route('/<int:start>', methods=['GET'])
+def get_price_data(start):
+    price_datas = price_data_service.get_nse_stock_data(start=start, limit=26)
+    if len(price_datas) > 0:
+        return jsonify([{k: v.to_dict()} for k, v in price_datas.items()])
+    return jsonify({'error': 'failed to fetch stock data'}), 500
