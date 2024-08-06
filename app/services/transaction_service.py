@@ -1,5 +1,5 @@
 from app import db
-from .transaction import Transaction
+from app.models.transaction import Transaction
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 

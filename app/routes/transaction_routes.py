@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from .transaction_service import TransactionService
+from app.services.transaction_service import TransactionService
 from datetime import datetime
 
 bp = Blueprint('transactions', __name__, url_prefix='/api/transactions')
