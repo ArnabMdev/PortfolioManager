@@ -1,13 +1,9 @@
-import datetime
-
 import yfinance as yf
 import pandas as pd
 from requests import Session
 from requests_cache import CacheMixin, SQLiteCache
 from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
 from pyrate_limiter import Duration, RequestRate, Limiter
-
-from model.PriceDataModel import PriceData
 
 
 class CachedLimiterSession(CacheMixin, LimiterMixin, Session):
@@ -17,12 +13,12 @@ class CachedLimiterSession(CacheMixin, LimiterMixin, Session):
 session = CachedLimiterSession(
     limiter=Limiter(RequestRate(2, Duration.SECOND * 5)),  # max 2 requests per 5 seconds
     bucket_class=MemoryQueueBucket,
-    backend=SQLiteCache("../yfinance.cache"),
+    backend=SQLiteCache("../../yfinance.cache"),
 )
 
 
 def get_nse_stock_list(start: int, end: int):
-    tickers = pd.read_csv('../data/StocksTraded.csv',index_col=1)['Symbol '].tolist()
+    tickers = pd.read_csv('../data/StocksTraded.csv', index_col=1)['Symbol '].tolist()
     ticker_list = []
     for i in range(start, end, 1):
         ticker_list.append(tickers[i] + ".NS")
