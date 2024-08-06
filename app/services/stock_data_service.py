@@ -1,9 +1,12 @@
+import datetime
 import yfinance as yf
 import pandas as pd
 from requests import Session
 from requests_cache import CacheMixin, SQLiteCache
 from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
 from pyrate_limiter import Duration, RequestRate, Limiter
+
+from app.models.price_data_model import PriceData
 
 
 class CachedLimiterSession(CacheMixin, LimiterMixin, Session):
@@ -28,38 +31,44 @@ def get_nse_stock_list(start: int, end: int):
 def get_nse_stock_data(start: int, end: int):
     try:
         tickers = get_nse_stock_list(start, end)
-        print(tickers)
         raw_price_data = yf.Tickers(tickers, session=session)
-        print(raw_price_data.tickers)
-        price_datas = []
-        # for k, v in raw_price_data.tickers.items():
-        #     if k is None or v is None:
-        #         continue
-        #     print(v.info)
-            # price_data = PriceData(
-            #     str(k),
-            #     v.info['open'],
-            #     v.info['close'],
-            #     {
-            #         'dayHigh': v.info['dayHigh'],
-            #         'regularMarketDayHigh': v.info['regularMarketDayHigh'],
-            #         'fiftyTwoWeekHigh': v.info['fiftyTwoWeekHigh']
-            #     },
-            #     {
-            #         'dayLow': v.info['dayLow'],
-            #         'regularMarketDayLow': v.info['regularMarketDayLow'],
-            #         'fiftyTwoWeekLow': v.info['fiftyTwoWeekLow']
-            #     },
-            #     v.info['volume'],
-            #     v.info['current_price'],
-            #     datetime.datetime.now()
-            # )
-            # price_datas.append(price_data)
+        price_datas = {}
+        for k, v in raw_price_data.tickers.items():
+            if k is None or v is None:
+                continue
+            # print(v.info)
+            price_data = PriceData(
+                highs={
+                    'dayHigh': v.info['dayHigh'],
+                    'regularMarketDayHigh': v.info['regularMarketDayHigh'],
+                    'fiftyTwoWeekHigh': v.info['fiftyTwoWeekHigh']
+                },
+                lows={
+                    'dayLow': v.info['dayLow'],
+                    'regularMarketDayLow': v.info['regularMarketDayLow'],
+                    'fiftyTwoWeekLow': v.info['fiftyTwoWeekLow']
+                },
+                volume=v.info['volume'],
+                current_price=v.info['currentPrice'],
+                timestamp=datetime.datetime.now()
+            )
+            price_datas[k] = price_data
         return price_datas
     except Exception as err:
         print(err)
         return {}
 
 
+def get_nse_stock_history(ticker, period):
+    try:
+        tick = yf.Ticker(ticker, session=session)
+        raw_data = tick.history(period=period, interval='90m')
+        return raw_data.to_json()
+    except Exception as err:
+        print(err)
+        return {}
+
+
 if __name__ == '__main__':
-    print(get_nse_stock_data(0, 25))
+    a = get_nse_stock_history('ZOMATO.NS', '1d')
+    print(a)

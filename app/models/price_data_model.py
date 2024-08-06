@@ -1,39 +1,14 @@
 import datetime
 
 
-class PriceData :
-    def __init__(self, ticker, open=0, close=0, highs={}, lows={}, volume=0, current_price=0, timestamp=datetime.datetime.now()):
-        self.__ticker = ticker
-        self.__open = open
-        self.__close = close
+class PriceData:
+    def __init__(self, highs={}, lows={}, volume=0, current_price=0,
+                 timestamp=datetime.datetime.now()):
         self.__highs = highs
         self.__lows = lows
         self.__volume = volume
         self.__current_price = current_price
         self.__timestamp = timestamp
-
-    @property
-    def ticker(self):
-        return self.__ticker
-
-    @ticker.setter
-    def ticker(self, value):
-        self.__ticker = value
-    @property
-    def open(self):
-        return self.__open
-
-    @open.setter
-    def open(self, value):
-        self.__open = value
-
-    @property
-    def close(self):
-        return self.__close
-
-    @close.setter
-    def close(self, value):
-        self.__close = value
 
     @property
     def high(self):
@@ -42,7 +17,6 @@ class PriceData :
     @high.setter
     def high(self, value):
         self.__highs = value
-
 
     @property
     def low(self):
