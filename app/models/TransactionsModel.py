@@ -1,4 +1,3 @@
-# transactions model
 class Transaction:
     def __init__(self, txn_id, ticker="", txn_type="buy",qty=0,price_rate=0,txn_date=""):
         self.__txn_id = txn_id
