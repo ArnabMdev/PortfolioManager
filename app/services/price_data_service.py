@@ -1,8 +1,10 @@
 import datetime
 import os.path
-
 import yfinance as yf
 import pandas as pd
+
+from app.models.holding import Holding
+from holding_service import HoldingService
 from requests import Session
 from requests_cache import CacheMixin, SQLiteCache
 from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
@@ -77,12 +79,29 @@ class PriceDataService:
                 timestamp=raw_data.index.tolist()
             )
             return price_history
+
         except Exception as err:
             print(err)
             return {}
 
+    def get_news_from_holdings(self):
+        holdings = HoldingService.get_all_holdings()
+        ticker_list = []
+        for holding in holdings:
+            ticker_list.append(holding.ticker)
+        news_list= {}
+        for ticker in ticker_list:
+            news_list[ticker] = yf.Ticker(ticker).news
+            # print(yf.Ticker(ticker))
+        return news_list
+
+
+
+
 
 if __name__ == '__main__':
     pds = PriceDataService()
+    # pds.get_news_from_holdings()
     # print(pds.get_nse_stock_history('MSFT','1d','90m').to_dict())
     # print(pds.get_nse_stock_data(start=0, end=20))
+    # print(yf.Ticker('AAPL').news)
