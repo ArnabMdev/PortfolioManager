@@ -3,8 +3,7 @@ import os.path
 import yfinance as yf
 import pandas as pd
 
-from app.models.holding import Holding
-from holding_service import HoldingService
+from app.services.holding_service import HoldingService
 from requests import Session
 from requests_cache import CacheMixin, SQLiteCache
 from requests_ratelimiter import LimiterMixin, MemoryQueueBucket

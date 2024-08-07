@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from .watchlist_service import WatchlistService
+from app.services.watchlist_service import WatchlistService
 
 bp = Blueprint('watchlist', __name__, url_prefix='/api/watchlist')
 
@@ -7,7 +7,7 @@ bp = Blueprint('watchlist', __name__, url_prefix='/api/watchlist')
 def get_watchlist():
     try:
         watchlist_items = WatchlistService.get_all_watchlist_items()
-        return jsonify([item.to_dict() for item in watchlist_items]), 200
+        return jsonify(watchlist_items), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

@@ -15,12 +15,13 @@ def create_app():
     migrate.init_app(app, db)
 
     from .routes import (user_routes, transaction_routes, holding_routes,
-                         price_data_route, transaction_routes, price_history_route,stock_news)
+                         price_data_route, transaction_routes, price_history_route, stock_news, watchlist_routes)
     app.register_blueprint(user_routes.bp)
     app.register_blueprint(holding_routes.bp)
     app.register_blueprint(price_data_route.bp)
     app.register_blueprint(price_history_route.bp)
     app.register_blueprint(transaction_routes.bp)
     app.register_blueprint(stock_news.bp)
+    app.register_blueprint(watchlist_routes.bp)
 
     return app
