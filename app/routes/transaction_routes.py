@@ -31,22 +31,6 @@ def create_transaction():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@bp.route('/<string:txn_id>', methods=['PUT'])
-def update_transaction(txn_id):
-    try:
-        data = request.json
-        updated_transaction = TransactionService.update_transaction(txn_id, data)
-        return jsonify(updated_transaction.to_dict()), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@bp.route('/<string:txn_id>', methods=['DELETE'])
-def delete_transaction(txn_id):
-    try:
-        TransactionService.delete_transaction(txn_id)
-        return jsonify({"message": "Transaction deleted successfully"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 @bp.route('/ticker/<string:ticker>', methods=['GET'])
 def get_transactions_by_ticker(ticker):

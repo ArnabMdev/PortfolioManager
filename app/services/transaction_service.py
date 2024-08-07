@@ -1,7 +1,8 @@
 from app import db
 from app.models.transaction import Transaction
+from app.services.holding_service import HoldingService
 from sqlalchemy.exc import SQLAlchemyError
-from datetime import datetime
+
 
 class TransactionService:
     @staticmethod
@@ -24,43 +25,29 @@ class TransactionService:
     def create_transaction(data):
         try:
             new_transaction = Transaction(**data)
+            holdings = HoldingService.get_holdings_by_ticker(new_transaction.ticker)
+            if new_transaction.txn_type == 'buy':
+                if len(holdings) == 0:
+                    HoldingService.create_holding({
+                        'user_id': 'user1',
+                        'ticker': new_transaction.ticker,
+                        'asset_type': 'Equity',
+                        'qty': new_transaction.qty,
+                        'avg_price': new_transaction.price_rate,
+                    })
+                else:
+                    HoldingService.update_avg_price(new_transaction.ticker, new_transaction.qty,
+                                                    new_transaction.price_rate)
+            elif new_transaction.txn_type == 'sell':
+                if len(holdings) == 0:
+                    return -1
+                HoldingService.update_holding_quantity(new_transaction.ticker, new_transaction.qty)
             db.session.add(new_transaction)
             db.session.commit()
             return new_transaction
         except SQLAlchemyError as e:
             db.session.rollback()
             raise Exception(f"Failed to create transaction: {str(e)}")
-
-    @staticmethod
-    def update_transaction(txn_id, data):
-        try:
-            transaction = Transaction.query.get(txn_id)
-            if not transaction:
-                raise Exception("Transaction not found")
-            
-            for key, value in data.items():
-                if hasattr(transaction, key):
-                    setattr(transaction, key, value)
-            
-            db.session.commit()
-            return transaction
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise Exception(f"Failed to update transaction: {str(e)}")
-
-    @staticmethod
-    def delete_transaction(txn_id):
-        try:
-            transaction = Transaction.query.get(txn_id)
-            if not transaction:
-                raise Exception("Transaction not found")
-            
-            db.session.delete(transaction)
-            db.session.commit()
-            return True
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise Exception(f"Failed to delete transaction: {str(e)}")
 
     @staticmethod
     def get_transactions_by_ticker(ticker):

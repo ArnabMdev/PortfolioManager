@@ -4,15 +4,14 @@ from datetime import datetime
 class Transaction(db.Model):
     __tablename__ = 'transactions'
 
-    txn_id = db.Column(db.String(255), primary_key=True)
+    txn_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     ticker = db.Column(db.String(20), nullable=False)
     txn_type = db.Column(db.String(10), nullable=False, default="buy")
     qty = db.Column(db.Float, nullable=False, default=0)
     price_rate = db.Column(db.Float, nullable=False, default=0)
     txn_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-    def __init__(self, txn_id, ticker="", txn_type="buy", qty=0, price_rate=0, txn_date=None):
-        self.txn_id = txn_id
+    def __init__(self,ticker="", txn_type="buy", qty=0, price_rate=0, txn_date=None):
         self.ticker = ticker
         self.txn_type = txn_type
         self.qty = qty

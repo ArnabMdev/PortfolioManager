@@ -1,78 +1,88 @@
-from app import db
-from app.models.price_data import PriceData
-from sqlalchemy.exc import SQLAlchemyError
+import datetime
+import os.path
+
+import yfinance as yf
+import pandas as pd
+from requests import Session
+from requests_cache import CacheMixin, SQLiteCache
+from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
+from pyrate_limiter import Duration, RequestRate, Limiter
+from app.models.price_data_models import PriceData, PriceHistory
+
+
+class CachedLimiterSession(CacheMixin, LimiterMixin, Session):
+    pass
+
 
 class PriceDataService:
-    @staticmethod
-    def get_all_price_data():
-        try:
-            return PriceData.query.all()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise Exception(f"Failed to retrieve price data: {str(e)}")
+    session = CachedLimiterSession(
+        limiter=Limiter(RequestRate(2, Duration.SECOND * 5)),  # max 2 requests per 5 seconds
+        bucket_class=MemoryQueueBucket,
+        backend=SQLiteCache("yfinance.cache"),
+    )
 
-    @staticmethod
-    def get_price_data_by_id(data_id):
+    def get_nse_stock_list(self, start: int, end: int):
         try:
-            return PriceData.query.get(data_id)
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise Exception(f"Failed to retrieve price data by id: {str(e)}")
+            app_root = os.path.dirname(__file__)
+            tickers = pd.read_csv(filepath_or_buffer=os.path.join(app_root, 'StocksTraded.csv'), index_col=1)['Symbol '].tolist()
+            # tickers = ['ZOMATO','TATAMOTORS']
+            ticker_list = []
+            for i in range(start, min(end,len(tickers)), 1):
+                ticker_list.append(tickers[i] + ".NS")
+            return ticker_list
+        except Exception as err:
+            print(err)
+            return []
 
-    @staticmethod
-    def get_price_data_by_ticker(ticker):
+    def get_nse_stock_data(self, start: int, limit: int):
         try:
-            return PriceData.query.filter_by(ticker=ticker).all()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise Exception(f"Failed to retrieve price data by ticker: {str(e)}")
+            tickers = self.get_nse_stock_list(start, start + limit)
+            raw_price_data = yf.Tickers(tickers, session=self.session)
+            price_datas = {}
+            for k, v in raw_price_data.tickers.items():
+                if k is None or v is None:
+                    continue
+                # print(v.info)
+                price_data = PriceData(
+                    highs={
+                        'dayHigh': v.info['dayHigh'],
+                        'regularMarketDayHigh': v.info['regularMarketDayHigh'],
+                        'fiftyTwoWeekHigh': v.info['fiftyTwoWeekHigh']
+                    },
+                    lows={
+                        'dayLow': v.info['dayLow'],
+                        'regularMarketDayLow': v.info['regularMarketDayLow'],
+                        'fiftyTwoWeekLow': v.info['fiftyTwoWeekLow']
+                    },
+                    volume=v.info['volume'],
+                    current_price=v.info['currentPrice'],
+                    timestamp=datetime.datetime.now()
+                )
+                price_datas[k] = price_data
+            return price_datas
+        except Exception as err:
+            print(err)
+            return {}
 
-    @staticmethod
-    def create_price_data(data):
+    def get_nse_stock_history(self, ticker, period, interval):
         try:
-            new_price_data = PriceData.from_dict(data)
-            db.session.add(new_price_data)
-            db.session.commit()
-            return new_price_data
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise Exception(f"Failed to create price data: {str(e)}")
+            tick = yf.Ticker(ticker, session=self.session)
+            raw_data = tick.history(period=period, interval=interval)
+            price_history = PriceHistory(
+                open=raw_data['Open'].tolist(),
+                high=raw_data['High'].tolist(),
+                low=raw_data['Low'].tolist(),
+                close=raw_data['Close'].tolist(),
+                volume=raw_data['Volume'].tolist(),
+                timestamp=raw_data.index.tolist()
+            )
+            return price_history
+        except Exception as err:
+            print(err)
+            return {}
 
-    @staticmethod
-    def update_price_data(data_id, data):
-        try:
-            price_data = PriceData.query.get(data_id)
-            if not price_data:
-                raise Exception("Price data not found")
-            
-            for key, value in data.items():
-                if hasattr(price_data, key):
-                    setattr(price_data, key, value)
-            
-            db.session.commit()
-            return price_data
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise Exception(f"Failed to update price data: {str(e)}")
 
-    @staticmethod
-    def delete_price_data(data_id):
-        try:
-            price_data = PriceData.query.get(data_id)
-            if not price_data:
-                raise Exception("Price data not found")
-            
-            db.session.delete(price_data)
-            db.session.commit()
-            return True
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise Exception(f"Failed to delete price data: {str(e)}")
-
-    @staticmethod
-    def get_latest_price_data(ticker):
-        try:
-            return PriceData.query.filter_by(ticker=ticker).order_by(PriceData.timestamp.desc()).first()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            raise Exception(f"Failed to retrieve latest price data for ticker: {str(e)}")
+if __name__ == '__main__':
+    pds = PriceDataService()
+    # print(pds.get_nse_stock_history('MSFT','1d','90m').to_dict())
+    # print(pds.get_nse_stock_data(start=0, end=20))
