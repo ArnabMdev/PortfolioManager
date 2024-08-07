@@ -7,7 +7,7 @@ from requests import Session
 from requests_cache import CacheMixin, SQLiteCache
 from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
 from pyrate_limiter import Duration, RequestRate, Limiter
-from app.models.price_data_model import PriceData, PriceHistory
+from app.models.price_data_models import PriceData, PriceHistory
 
 
 class CachedLimiterSession(CacheMixin, LimiterMixin, Session):

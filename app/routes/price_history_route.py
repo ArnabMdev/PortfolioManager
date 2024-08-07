@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.services.price_data_service import PriceDataService
+from app.services.price_data_service1 import PriceDataService
 import pandas as pd
 
 bp = Blueprint('price_history', __name__, url_prefix='/api/price_history')
