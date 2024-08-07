@@ -14,9 +14,11 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from app.routes import user_routes  #, holding_routes, price_routes, transaction_routes
+
+    from .routes import user_routes, transaction_routes , holding_routes, price_data_routes, transaction_routes
     app.register_blueprint(user_routes.bp)
-    # app.register_blueprint(holding_routes.bp)
-    # app.register_blueprint(transaction_routes.bp)
+    app.register_blueprint(holding_routes.bp)
+    app.register_blueprint(price_data_routes.bp)
+    app.register_blueprint(transaction_routes.bp)
 
     return app
