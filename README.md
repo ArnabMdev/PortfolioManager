@@ -1,3 +1,3 @@
 # PortfolioManager
 
-# trello link [https://trello.com/b/xW7cxXSc/stashdash]
+trello link [https://trello.com/b/xW7cxXSc/stashdash]
