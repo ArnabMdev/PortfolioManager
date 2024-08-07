@@ -64,3 +64,5 @@ class TransactionService:
         except SQLAlchemyError as e:
             db.session.rollback()
             raise Exception(f"Failed to retrieve transactions by date range: {str(e)}")
+
+
