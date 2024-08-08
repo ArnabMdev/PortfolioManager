@@ -793,7 +793,78 @@
         },
         "required": ["id", "ticker", "amount", "date", "type"]
       },
-      
+      "PriceHistory": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of the price data."
+          },
+          "open": {
+            "type": "number",
+            "format": "float",
+            "description": "Opening price on the given date."
+          },
+          "high": {
+            "type": "number",
+            "format": "float",
+            "description": "Highest price on the given date."
+          },
+          "low": {
+            "type": "number",
+            "format": "float",
+            "description": "Lowest price on the given date."
+          },
+          "close": {
+            "type": "number",
+            "format": "float",
+            "description": "Closing price on the given date."
+          },
+          "volume": {
+            "type": "number",
+            "format": "float",
+            "description": "Trading volume on the given date."
+          }
+        },
+        "required": ["date", "open", "high", "low", "close", "volume"]
+      },
+      "PriceData": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of the price data."
+          },
+          "open": {
+            "type": "number",
+            "format": "float",
+            "description": "Opening price on the given date."
+          },
+          "high": {
+            "type": "number",
+            "format": "float",
+            "description": "Highest price on the given date."
+          },
+          "low": {
+            "type": "number",
+            "format": "float",
+            "description": "Lowest price on the given date."
+          },
+          "close": {
+            "type": "number",
+            "format": "float",
+            "description": "Closing price on the given date."
+          },
+          "volume": {
+            "type": "number",
+            "format": "float",
+            "description": "Trading volume on the given date."
+          }
+        },
+        "required": ["date", "open", "high", "low", "close", "volume"]
+      },
         "WatchlistItem": {
         "type": "object",
         "properties": {

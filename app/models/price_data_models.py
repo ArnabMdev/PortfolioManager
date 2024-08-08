@@ -3,7 +3,7 @@ import datetime
 
 class PriceData:
     def __init__(self, highs={}, lows={}, volume=0, current_price=0,
-                 timestamp=datetime.datetime.now()):
+        timestamp=datetime.datetime.now()):
         self.__highs = highs
         self.__lows = lows
         self.__volume = volume
