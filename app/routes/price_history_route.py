@@ -7,11 +7,12 @@ price_data_service = PriceDataService()
 
 
 @bp.route('/<ticker>/<period>/<interval>', methods=['GET'])
-def get_price_data(ticker, period, interval):
+def get_price_history(ticker, period, interval):
     try:
         price_history = price_data_service.get_nse_stock_history(ticker, period, interval)
         if price_history is not None:
-            return jsonify({ticker : price_history.to_dict()})
+            response = jsonify({ticker : price_history.to_dict()})
+            response.headers.add('Access-Control-Allow-Origin', '*')
         return jsonify({'error': 'No data found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500

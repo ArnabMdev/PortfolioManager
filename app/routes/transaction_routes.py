@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify, request
+from flask_cors import cross_origin
+
 from app.services.transaction_service import TransactionService
 from datetime import datetime
 
@@ -23,6 +25,7 @@ def get_transaction(txn_id):
         return jsonify({"error": str(e)}), 500
 
 @bp.route('', methods=['POST'])
+@cross_origin('*')
 def create_transaction():
     try:
         data = request.json
