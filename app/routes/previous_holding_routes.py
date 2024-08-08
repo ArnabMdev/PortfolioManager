@@ -32,7 +32,7 @@ def get_holdings_by_ticker(ticker):
         holdings = PreviousHoldingService.get_holdings_by_ticker(ticker)
         response = jsonify([holding.to_dict() for holding in holdings]), 200
         response.headers.add('Access-Control-Allow-Origin', '*')
-
+        return response
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -43,5 +43,6 @@ def get_holdings_by_asset_type(asset_type):
         holdings = PreviousHoldingService.get_holdings_by_asset_type(asset_type)
         response = jsonify([holding.to_dict() for holding in holdings]), 200
         response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
     except Exception as e:
         return jsonify({'error': str(e)}), 500

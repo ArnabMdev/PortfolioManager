@@ -125,8 +125,9 @@ class PriceDataService:
 
 if __name__ == '__main__':
     pds = PriceDataService()
-    print(pds.get_nse_stock_data("a"))
+    # print(pds.get_nse_stock_data("a"))
     # print(yf.Ticker('MSFT').info)
+    print(pds.get_nse_stock_history('ZOMATO.NS','1d','60m'))
     # pds.get_news_from_holdings()
     # print(pds.get_nse_stock_history('MSFT','1d','90m').to_dict())
     # print(pds.get_nse_stock_data(start=0, end=20))
