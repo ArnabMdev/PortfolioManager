@@ -764,7 +764,21 @@
               "format": "float"
             }
           }
-        }
+        },
+        "WatchlistItem": {
+        "type": "object",
+        "properties": {
+          "ticker": {
+            "type": "string",
+            "description": "Ticker symbol of the watchlist item"
+          },
+          "details": {
+            "type": "object",
+            "description": "Additional details about the watchlist item"
+          }
+        },
+        "required": ["ticker"]
+      }
       }
     }
   }
