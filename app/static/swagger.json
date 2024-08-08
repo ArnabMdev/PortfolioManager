@@ -8,5 +8,764 @@
         "name": "MIT",
         "url": "https://opensource.org/licenses/MIT"
       }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:5000",
+        "description": "Local server"
+      }
+    ],
+    "paths": {
+      "/api/users": {
+        "get": {
+          "tags": ["Users"],
+          "summary": "Get all users",
+          "description": "Returns a list of all users.",
+          "responses": {
+            "200": {
+              "description": "A list of users",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": ["Users"],
+          "summary": "Create a new user",
+          "description": "Creates a new user and returns the created user object.",
+          "requestBody": {
+            "description": "User object to be created",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User created",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/users/{id}": {
+        "get": {
+          "tags": ["Users"],
+          "summary": "Get a user by ID",
+          "description": "Returns a single user by ID.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "ID of the user"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        },
+        "put": {
+          "tags": ["Users"],
+          "summary": "Update a user by ID",
+          "description": "Updates an existing user by ID.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "ID of the user"
+            }
+          ],
+          "requestBody": {
+            "description": "Updated user object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "User updated",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Users"],
+          "summary": "Delete a user by ID",
+          "description": "Deletes an existing user by ID.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "ID of the user"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "User deleted successfully"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/api/holdings/": {
+        "get": {
+          "tags": ["Holdings"],
+          "summary": "Get all holdings",
+          "description": "Returns a list of all holdings.",
+          "responses": {
+            "200": {
+              "description": "A list of holdings",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Holding"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/holdings/user/{user_id}": {
+        "get": {
+          "tags": ["Holdings"],
+          "summary": "Get holdings by user ID",
+          "description": "Returns a list of holdings for a specific user.",
+          "parameters": [
+            {
+              "name": "user_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "ID of the user"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of holdings for the specified user",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Holding"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/holdings/ticker/{ticker}": {
+        "get": {
+          "tags": ["Holdings"],
+          "summary": "Get holdings by ticker",
+          "description": "Returns a list of holdings with a specific ticker.",
+          "parameters": [
+            {
+              "name": "ticker",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Ticker symbol of the holdings"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of holdings with the specified ticker",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Holding"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/holdings/asset_type/{asset_type}": {
+        "get": {
+          "tags": ["Holdings"],
+          "summary": "Get holdings by asset type",
+          "description": "Returns a list of holdings with a specific asset type.",
+          "parameters": [
+            {
+              "name": "asset_type",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Asset type of the holdings"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of holdings with the specified asset type",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Holding"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/transactions": {
+        "get": {
+          "tags": ["Transactions"],
+          "summary": "Get all transactions",
+          "description": "Returns a list of all transactions.",
+          "responses": {
+            "200": {
+              "description": "A list of transactions",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Transaction"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "post": {
+          "tags": ["Transactions"],
+          "summary": "Create a new transaction",
+          "description": "Creates a new transaction and returns the created transaction object.",
+          "requestBody": {
+            "description": "Transaction object to be created",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Transaction created",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/transactions/{txn_id}": {
+        "get": {
+          "tags": ["Transactions"],
+          "summary": "Get a transaction by ID",
+          "description": "Returns a single transaction by ID.",
+          "parameters": [
+            {
+              "name": "txn_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID of the transaction"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Transaction found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Transaction not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/transactions/ticker/{ticker}": {
+        "get": {
+          "tags": ["Transactions"],
+          "summary": "Get transactions by ticker",
+          "description": "Returns a list of transactions for a specific ticker.",
+          "parameters": [
+            {
+              "name": "ticker",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Ticker symbol of the transactions"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of transactions for the specified ticker",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Transaction"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/transactions/date-range": {
+        "get": {
+          "tags": ["Transactions"],
+          "summary": "Get transactions by date range",
+          "description": "Returns a list of transactions within a specified date range.",
+          "parameters": [
+            {
+              "name": "start_date",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "date"
+              },
+              "description": "Start date of the range (YYYY-MM-DD)"
+            },
+            {
+              "name": "end_date",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "date"
+              },
+              "description": "End date of the range (YYYY-MM-DD)"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of transactions within the specified date range",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Transaction"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid date format"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/price_history/{ticker}/{period}/{interval}": {
+        "get": {
+          "tags": ["Price History"],
+          "summary": "Get price history data",
+          "description": "Returns the price history data for a specific ticker over a specified period and interval.",
+          "parameters": [
+            {
+              "name": "ticker",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Ticker symbol"
+            },
+            {
+              "name": "period",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Time period for the data"
+            },
+            {
+              "name": "interval",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Data interval"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Price history data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PriceHistory"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No data found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/price_data/": {
+        "get": {
+          "tags": ["Price Data"],
+          "summary": "Get default price data",
+          "description": "Returns the default stock price data.",
+          "responses": {
+            "200": {
+              "description": "Default stock price data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PriceData"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Failed to fetch stock data"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/price_data/{start}": {
+        "get": {
+          "tags": ["Price Data"],
+          "summary": "Get paginated price data",
+          "description": "Returns paginated stock price data starting from a specified index.",
+          "parameters": [
+            {
+              "name": "start",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "Starting index for pagination"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Paginated stock price data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PriceData"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Failed to fetch stock data"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+          "/api/watchlist": {
+        "get": {
+          "tags": ["Watchlist"],
+          "summary": "Get all watchlist items",
+          "description": "Returns a list of all items in the watchlist.",
+          "responses": {
+            "200": {
+              "description": "A list of watchlist items",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/WatchlistItem"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "post": {
+          "tags": ["Watchlist"],
+          "summary": "Add an item to the watchlist",
+          "description": "Adds a new item to the watchlist and returns the added item.",
+          "requestBody": {
+            "description": "Watchlist item to be added",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistItem"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Item added to the watchlist",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WatchlistItem"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request - Ticker is required"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/watchlist/{ticker}": {
+        "get": {
+          "tags": ["Watchlist"],
+          "summary": "Get a watchlist item by ticker",
+          "description": "Returns a specific item from the watchlist by ticker.",
+          "parameters": [
+            {
+              "name": "ticker",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Ticker symbol of the watchlist item"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Watchlist item found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WatchlistItem"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Ticker not found in watchlist"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Watchlist"],
+          "summary": "Remove an item from the watchlist",
+          "description": "Removes a specific item from the watchlist by ticker.",
+          "parameters": [
+            {
+              "name": "ticker",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Ticker symbol of the watchlist item"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Watchlist item removed"
+            },
+            "404": {
+              "description": "Ticker not found in watchlist"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "Holding": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "user_id": {
+              "type": "integer"
+            },
+            "ticker": {
+              "type": "string"
+            },
+            "asset_type": {
+              "type": "string"
+            },
+            "quantity": {
+              "type": "number",
+              "format": "float"
+            },
+            "price": {
+              "type": "number",
+              "format": "float"
+            }
+          }
+        }
+      }
     }
-}    
+  }
+  
