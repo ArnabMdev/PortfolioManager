@@ -765,6 +765,35 @@
             }
           }
         },
+        "Transaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the transaction"
+          },
+          "ticker": {
+            "type": "string",
+            "description": "Ticker symbol associated with the transaction"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "Amount involved in the transaction"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of the transaction"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of transaction (e.g., buy, sell)"
+          }
+        },
+        "required": ["id", "ticker", "amount", "date", "type"]
+      },
+      
         "WatchlistItem": {
         "type": "object",
         "properties": {
