@@ -1,0 +1,55 @@
+.watchlist-container {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 20px;
+  padding: 20px;
+}
+
+.watchlist-table-container {
+  width: 70%;
+}
+
+.watchlist-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.watchlist-table th,
+.watchlist-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+.watchlist-table th {
+  background-color: rgb(243, 122, 197);
+  text-align: left;
+}
+
+/* New styles for the Move to Holdings button */
+.watchlist-table button {
+  background-color: #bd228e; /* Blue background */
+  color: #fff; /* White text */
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.watchlist-table button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  color: #e0e0e0; /* Light gray text on hover */
+}
+
+.news-cards-container {
+  width: 25%;
+  margin-left: 20px;
+}
+
+.news-card {
+  background-color: pink;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+}

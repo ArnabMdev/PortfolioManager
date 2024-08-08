@@ -1,0 +1,49 @@
+.sidebar {
+  width: 250px;
+  background-color: #5bdbc6;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.username {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.nav-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-button {
+  display: block;
+  padding: 10px 20px;
+  margin: 5px 0;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  background-color: blue;
+  transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+  background-color: #ccc;
+}

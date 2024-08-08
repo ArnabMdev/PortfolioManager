@@ -1,0 +1,20 @@
+.table-container {
+  margin-left: 20px;
+  padding: 20px;
+}
+
+.holdings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.holdings-table th,
+.holdings-table td {
+  border: 1px solid black;
+  padding: 12px;
+}
+
+.holdings-table th {
+  background-color: rgb(122, 195, 243);
+  text-align: left;
+}
