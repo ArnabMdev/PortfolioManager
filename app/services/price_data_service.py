@@ -27,7 +27,9 @@ class PriceDataService:
     def get_nse_stock_list():
         try:
             app_root = os.path.dirname(__file__)
-            tickers = pd.read_csv(filepath_or_buffer=os.path.join(app_root, 'StockData.csv',), index_col=0,header=None)[1].tolist()
+            tickers = \
+            pd.read_csv(filepath_or_buffer=os.path.join(app_root, 'StockData.csv', ), index_col=0, header=None)[
+                1].tolist()
             # tickers = ['ZOMATO','TATAMOTORS']
             ticker_list = []
             for tick in tickers:
@@ -104,7 +106,7 @@ class PriceDataService:
         ticker_list = []
         for holding in holdings:
             ticker_list.append(holding.ticker)
-        news_list= {}
+        news_list = {}
         for ticker in ticker_list:
             news_list[ticker] = yf.Ticker(ticker).news
             # print(yf.Ticker(ticker))
@@ -114,20 +116,24 @@ class PriceDataService:
         holdings = PreviousHoldingService.get_all_holdings()
         ticker_list = [holding.ticker for holding in holdings]
         price_data = self.get_stock_data(tickers=ticker_list)
+        sale_prices = []
         profits = []
         for i in range(len(holdings)):
+            sale_prices.append(price_data[i].current_price)
             profit = holdings[i].avg_buy_price - price_data[i].current_price
             profits.append(profit)
-        return profits
-
-
+        return {
+            'profits': profits,
+            'sale_prices': sale_prices,
+            'timestamp': datetime.datetime.now()
+        }
 
 
 if __name__ == '__main__':
     pds = PriceDataService()
     # print(pds.get_nse_stock_data("a"))
     # print(yf.Ticker('MSFT').info)
-    print(pds.get_nse_stock_history('ZOMATO.NS','1d','60m'))
+    print(pds.get_nse_stock_history('ZOMATO.NS', '1d', '60m'))
     # pds.get_news_from_holdings()
     # print(pds.get_nse_stock_history('MSFT','1d','90m').to_dict())
     # print(pds.get_nse_stock_data(start=0, end=20))
