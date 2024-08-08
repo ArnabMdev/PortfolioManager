@@ -3,10 +3,21 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from .config import Config
+from flask_swagger_ui import get_swaggerui_blueprint
 
 db = SQLAlchemy()
 migrate = Migrate()
 
+#swagger configs
+SWAGGER_URL= '/api/docs'
+API_URL= '/static/swagger.json'
+SWAGGER_BLUEPRINT= get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': 'StashDash APIs'
+    }
+)
 
 def create_app():
     app = Flask(__name__)
@@ -26,5 +37,6 @@ def create_app():
     app.register_blueprint(transaction_routes.bp)
     app.register_blueprint(stock_news.bp)
     app.register_blueprint(watchlist_routes.bp)
+    app.register_blueprint(SWAGGER_BLUEPRINT, url_prefix= SWAGGER_URL)
 
     return app
