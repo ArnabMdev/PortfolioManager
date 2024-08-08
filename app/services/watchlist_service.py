@@ -1,12 +1,22 @@
 from app import db
-from .watchlist import Watchlist
+from app.models.watchlist import Watchlist
+from app.services.price_data_service import PriceDataService
 from sqlalchemy.exc import SQLAlchemyError
+
+
 
 class WatchlistService:
     @staticmethod
     def get_all_watchlist_items():
         try:
-            return Watchlist.query.all()
+            pds = PriceDataService()
+            watchlist = Watchlist.query.all()
+            tickers = [watchlist_item.ticker for watchlist_item in watchlist]
+            watchlist_with_data = {}
+            for ticker in tickers:
+                watchlist_with_data[ticker] = pds.get_nse_stock_history(ticker, "1d","60m").to_dict()
+            return watchlist_with_data
+
         except SQLAlchemyError as e:
             db.session.rollback()
             raise Exception(f"Failed to retrieve watchlist items: {str(e)}")
