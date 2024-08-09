@@ -1,6 +1,7 @@
 from app import db
 from app.models.watchlist import Watchlist
 from app.services.price_data_service import PriceDataService
+import yfinance as yf
 from sqlalchemy.exc import SQLAlchemyError
 
 
@@ -55,3 +56,15 @@ class WatchlistService:
         except SQLAlchemyError as e:
             db.session.rollback()
             raise Exception(f"Failed to remove from watchlist: {str(e)}")
+
+    @staticmethod
+    def get_news_from_watchlist():
+        watchlisted_tickers = WatchlistService.get_all_watchlist_items()
+        ticker_list = []
+        for holding in watchlisted_tickers:
+            ticker_list.append(holding)
+        news_list = {}
+        for ticker in ticker_list:
+            news_list[ticker] = yf.Ticker(ticker, session=PriceDataService.session).news
+            # print(yf.Ticker(ticker))
+        return news_list

@@ -13,7 +13,6 @@ from pyrate_limiter import Duration, RequestRate, Limiter
 from app.models.price_data import PriceData
 from app.models.price_history import PriceHistory
 from app.services.previous_holding_service import PreviousHoldingService
-from app.services.watchlist_service import WatchlistService
 
 
 class CachedLimiterSession(CacheMixin, LimiterMixin, Session):
@@ -94,16 +93,7 @@ class PriceDataService:
             print(err)
             return {}
 
-    def get_news_from_watchlist(self):
-        watchlisted_tickers = WatchlistService.get_all_watchlist_items()
-        ticker_list = []
-        for holding in watchlisted_tickers:
-            ticker_list.append(holding.ticker)
-        news_list = {}
-        for ticker in ticker_list:
-            news_list[ticker] = yf.Ticker(ticker, session=self.session).news
-            # print(yf.Ticker(ticker))
-        return news_list
+
 
     def get_profits_from_holdings(self):
         try:
