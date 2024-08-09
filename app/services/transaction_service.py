@@ -1,6 +1,6 @@
 from app import db
 from app.models.transaction import Transaction
-from app.services.current_holding_service import PreviousHoldingService
+from app.services.current_holding_service import CurrentHoldingService
 from app.services.previous_holding_service import PreviousHoldingService
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -26,36 +26,40 @@ class TransactionService:
     def create_transaction(data):
         try:
             new_transaction = Transaction(**data)
-            current_holdings = PreviousHoldingService.get_holdings_by_ticker(new_transaction.ticker)
+            current_holdings = CurrentHoldingService.get_holdings_by_ticker(new_transaction.ticker)
             previous_holdings = PreviousHoldingService.get_holdings_by_ticker(new_transaction.ticker)
             if new_transaction.txn_type == 'buy':
                 if len(current_holdings) == 0:
-                    PreviousHoldingService.create_holding({
+                    CurrentHoldingService.create_holding({
                         'user_id': 'user1',
-                        'stock_name':new_transaction.stock_name,
+                        'stock_name': new_transaction.stock_name,
                         'ticker': new_transaction.ticker,
                         'asset_type': 'Equity',
                         'qty': new_transaction.qty,
                         'avg_buy_price': new_transaction.price_rate,
                     })
                 else:
-                    PreviousHoldingService.update_avg_buy_price(new_transaction.ticker, new_transaction.qty,
-                                                                new_transaction.price_rate)
+                    CurrentHoldingService.update_avg_buy_price(new_transaction.ticker, new_transaction.qty,
+                                                               new_transaction.price_rate)
             elif new_transaction.txn_type == 'sell':
                 if len(current_holdings) < new_transaction.qty:
                     raise Exception("Inadequate number of stocks to sell")
                 if len(previous_holdings) == 0:
                     PreviousHoldingService.create_holding({
                         'user_id': 'user1',
-                        'stock_name':new_transaction.stock_name,
+                        'stock_name': new_transaction.stock_name,
                         'ticker': new_transaction.ticker,
                         'asset_type': 'Equity',
                         'qty': new_transaction.qty,
-                        'avg_buy_price': previous_holdings[0].avg_buy_price,
+                        'avg_buy_price': current_holdings[0].avg_buy_price,
                         'avg_sell_price': new_transaction.price_rate,
 
                     })
-                PreviousHoldingService.update_holding_quantity(new_transaction.ticker, new_transaction.qty)
+                else:
+                    PreviousHoldingService.update_avg_sell_price(
+                        new_transaction.ticker, new_transaction.qty, new_transaction.price_rate
+                    )
+                CurrentHoldingService.update_holding_quantity(new_transaction.ticker, new_transaction.qty)
             db.session.add(new_transaction)
             db.session.commit()
             return new_transaction
@@ -78,5 +82,3 @@ class TransactionService:
         except SQLAlchemyError as e:
             db.session.rollback()
             raise Exception(f"Failed to retrieve transactions by date range: {str(e)}")
-
-

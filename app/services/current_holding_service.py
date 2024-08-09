@@ -2,8 +2,11 @@ from app import db
 from app.models.current_holding import CurrentHolding
 from sqlalchemy.exc import SQLAlchemyError
 
+from app.models.previous_holding import PreviousHolding
+from app.services.previous_holding_service import PreviousHoldingService
 
-class PreviousHoldingService:
+
+class CurrentHoldingService:
     @staticmethod
     def get_all_holdings():
         try:
@@ -85,8 +88,11 @@ class PreviousHoldingService:
             if not holding:
                 print(ticker)
                 raise Exception("Holding not found")
-
             holding.qty += quantity_change
+            if holding.qty == 0:
+                db.session.delete(holding)
+                db.session.commit()
+                return {"msg" : "holdings deleted successfully"}
 
             if holding.qty < 0:
                 raise Exception("Holding quantity cannot be negative")
@@ -105,7 +111,7 @@ class PreviousHoldingService:
                 raise Exception("Holding not found")
 
             holding.avg_buy_price = (buy_price * qty + holding.avg_buy_price * holding.qty) / (qty + holding.qty)
-            holding.qty += qty
+            CurrentHoldingService.update_holding_quantity(ticker, qty)
             db.session.commit()
             return holding
         except SQLAlchemyError as e:

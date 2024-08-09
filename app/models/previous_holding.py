@@ -1,7 +1,7 @@
 from app import db
 
 
-class CurrentHolding(db.Model):
+class PreviousHolding(db.Model):
     __tablename__ = 'previous_holdings'
     ticker = db.Column(db.String(20), nullable=False, primary_key=True)
     stock_name = db.Column(db.String(255), nullable=False, index=True)
@@ -27,8 +27,8 @@ class CurrentHolding(db.Model):
             "user_id": self.user_id,
             "asset_type": self.asset_type,
             "qty": self.qty,
-            "avg_price": self.avg_buy_price,
-            "sell_price": self.avg_sell_price
+            "avg_buy_price": self.avg_buy_price,
+            "avg_sell_price": self.avg_sell_price
         }
 
     @staticmethod

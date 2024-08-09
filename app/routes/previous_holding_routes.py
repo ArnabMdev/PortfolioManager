@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
-from app.services.current_holding_service import PreviousHoldingService
+from app.services.current_holding_service import CurrentHoldingService
+from app.services.previous_holding_service import PreviousHoldingService
 
 bp = Blueprint('previous_holdings', __name__, url_prefix='/api/previous_holdings')
 

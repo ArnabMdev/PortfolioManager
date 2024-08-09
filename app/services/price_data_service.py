@@ -3,7 +3,7 @@ import os.path
 import yfinance as yf
 import pandas as pd
 
-from app.services.current_holding_service import PreviousHoldingService
+from app.services.current_holding_service import CurrentHoldingService
 from requests import Session
 from requests_cache import CacheMixin, SQLiteCache
 from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
@@ -101,7 +101,7 @@ class PriceDataService:
             return {}
 
     def get_news_from_holdings(self):
-        holdings = PreviousHoldingService.get_all_holdings()
+        holdings = CurrentHoldingService.get_all_holdings()
         ticker_list = []
         for holding in holdings:
             ticker_list.append(holding.ticker)
@@ -112,7 +112,7 @@ class PriceDataService:
         return news_list
 
     def get_profits_from_holdings(self):
-        holdings = PreviousHoldingService.get_all_holdings()
+        holdings = CurrentHoldingService.get_all_holdings()
         ticker_list = [holding.ticker for holding in holdings]
         price_data = self.get_stock_data(tickers=ticker_list)
         profits = []

@@ -1,5 +1,5 @@
 from app import db
-from app.models.current_holding import CurrentHolding
+from app.models.previous_holding import PreviousHolding
 from sqlalchemy.exc import SQLAlchemyError
 
 
@@ -7,7 +7,7 @@ class PreviousHoldingService:
     @staticmethod
     def get_all_holdings():
         try:
-            return CurrentHolding.query.all()
+            return PreviousHolding.query.all()
         except SQLAlchemyError as e:
             db.session.rollback()
             raise Exception(f"Failed to retrieve holdings: {str(e)}")
@@ -15,7 +15,7 @@ class PreviousHoldingService:
     @staticmethod
     def get_holdings_by_user_id(user_id):
         try:
-            return CurrentHolding.query.filter_by(user_id=user_id).all()
+            return PreviousHolding.query.filter_by(user_id=user_id).all()
         except SQLAlchemyError as e:
             db.session.rollback()
             raise Exception(f"Failed to retrieve holdings for user: {str(e)}")
@@ -23,7 +23,7 @@ class PreviousHoldingService:
     @staticmethod
     def create_holding(data):
         try:
-            new_holding = CurrentHolding(**data)
+            new_holding = PreviousHolding(**data)
             db.session.add(new_holding)
             db.session.commit()
             return new_holding
@@ -34,7 +34,7 @@ class PreviousHoldingService:
     @staticmethod
     def update_holding(ticker, data):
         try:
-            holding = CurrentHolding.query.get(ticker)
+            holding = PreviousHolding.query.get(ticker)
             if not holding:
                 raise Exception("Holding not found")
 
@@ -51,7 +51,7 @@ class PreviousHoldingService:
     @staticmethod
     def delete_holding(ticker):
         try:
-            holding = CurrentHolding.query.get(ticker)
+            holding = PreviousHolding.query.get(ticker)
             if not holding:
                 raise Exception("Holding not found")
 
@@ -65,7 +65,7 @@ class PreviousHoldingService:
     @staticmethod
     def get_holdings_by_ticker(ticker):
         try:
-            return CurrentHolding.query.filter_by(ticker=ticker).all()
+            return PreviousHolding.query.filter_by(ticker=ticker).all()
         except SQLAlchemyError as e:
             db.session.rollback()
             return None
@@ -73,7 +73,7 @@ class PreviousHoldingService:
     @staticmethod
     def get_holdings_by_asset_type(asset_type):
         try:
-            return CurrentHolding.query.filter_by(asset_type=asset_type).all()
+            return PreviousHolding.query.filter_by(asset_type=asset_type).all()
         except SQLAlchemyError as e:
             db.session.rollback()
             raise Exception(f"Failed to retrieve holdings by asset type: {str(e)}")
@@ -81,7 +81,7 @@ class PreviousHoldingService:
     @staticmethod
     def update_holding_quantity(ticker: str, quantity_change: float):
         try:
-            holding = CurrentHolding.query.get(ticker)
+            holding = PreviousHolding.query.get(ticker)
             if not holding:
                 print(ticker)
                 raise Exception("Holding not found")
@@ -98,14 +98,14 @@ class PreviousHoldingService:
             raise Exception(f"Failed to update holding quantity: {str(e)}")
 
     @staticmethod
-    def update_avg_sell_price(ticker, qty, buy_price):
+    def update_avg_sell_price(ticker, qty, sell_price):
         try:
-            holding = CurrentHolding.query.get(ticker)
+            holding = PreviousHolding.query.get(ticker)
             if not holding:
                 raise Exception("Holding not found")
 
-            holding.avg_buy_price = (buy_price * qty + holding.avg_buy_price * holding.qty) / (qty + holding.qty)
-            holding.qty += qty
+            holding.avg_sell_price = (sell_price * qty + holding.avg_sell_price * holding.qty) / (qty + holding.qty)
+            PreviousHoldingService.update_holding_quantity(ticker, qty)
             db.session.commit()
             return holding
         except SQLAlchemyError as e:
