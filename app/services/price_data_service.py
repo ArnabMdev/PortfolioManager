@@ -27,16 +27,16 @@ class PriceDataService:
     )
 
     @staticmethod
-    def get_nse_stock_list():
+    def get_nse_stock_list(starts_with):
         try:
             app_root = os.path.dirname(__file__)
-            tickers = \
-                pd.read_csv(filepath_or_buffer=os.path.join(app_root, 'StockData.csv', ), index_col=0, header=None)[
-                    1].tolist()
+            tickers = pd.read_csv(filepath_or_buffer=os.path.join(app_root, 'StockData.csv', ),
+                                  index_col=0, header=None)[1].tolist()
             # tickers = ['ZOMATO','TATAMOTORS']
             ticker_list = []
             for tick in tickers:
-                ticker_list.append(str(tick) + str('.NS'))
+                if tick.startswith(starts_with):
+                    ticker_list.append(str(tick) + str('.NS'))
             return ticker_list
         except Exception as err:
             print(err)

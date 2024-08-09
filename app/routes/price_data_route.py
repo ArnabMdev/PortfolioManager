@@ -36,9 +36,9 @@ def get_default_price_data():
         return "CSV file not found"
 
 
-@bp.route('/list', methods=['GET'])
-def get_stock_list():
-    stock_list = price_data_service.get_nse_stock_list()
+@bp.route('/list/<string:startswith>', methods=['GET'])
+def get_stock_list(startswith):
+    stock_list = price_data_service.get_nse_stock_list(starts_with=startswith)
     if len(stock_list) > 0:
         response = jsonify(stock_list)
         response.headers.add('Access-Control-Allow-Origin', '*')
