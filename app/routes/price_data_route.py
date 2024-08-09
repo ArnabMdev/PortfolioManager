@@ -36,7 +36,7 @@ def get_default_price_data():
         return "CSV file not found"
 
 
-@bp.route('/list/', methods=['GET'])
+@bp.route('/list', methods=['GET'])
 def get_stock_list():
     stock_list = price_data_service.get_nse_stock_list()
     if len(stock_list) > 0:
@@ -47,7 +47,7 @@ def get_stock_list():
     return jsonify({'error': 'failed to fetch stock data'}), 500
 
 
-@bp.route('/profits/', methods=['GET'])
+@bp.route('/profits', methods=['GET'])
 def get_profits():
     try:
         profits = price_data_service.get_profits_from_holdings()

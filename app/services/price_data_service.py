@@ -10,6 +10,7 @@ from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
 from pyrate_limiter import Duration, RequestRate, Limiter
 from app.models.price_data import PriceData
 from app.models.price_history import PriceHistory
+from app.services.previous_holding_service import PreviousHoldingService
 
 
 class CachedLimiterSession(CacheMixin, LimiterMixin, Session):
@@ -27,7 +28,9 @@ class PriceDataService:
     def get_nse_stock_list():
         try:
             app_root = os.path.dirname(__file__)
-            tickers = pd.read_csv(filepath_or_buffer=os.path.join(app_root, 'StockData.csv',), index_col=0,header=None)[1].tolist()
+            tickers = \
+            pd.read_csv(filepath_or_buffer=os.path.join(app_root, 'StockData.csv', ), index_col=0, header=None)[
+                1].tolist()
             # tickers = ['ZOMATO','TATAMOTORS']
             ticker_list = []
             for tick in tickers:
@@ -71,9 +74,9 @@ class PriceDataService:
                 # print(v.info)
                 price_data = PriceData(
                     ticker=k,
-                    stock_name=v.info['longName'],
-                    current_price=v.info['currentPrice'],
-                    volume=v.info['volume'],
+                    stock_name=v.info.get('longName'),
+                    current_price=v.info.get('currentPrice'),
+                    volume=v.info.get('volume'),
                 )
                 price_data_list.append(price_data)
             return price_data_list
@@ -105,31 +108,54 @@ class PriceDataService:
         ticker_list = []
         for holding in holdings:
             ticker_list.append(holding.ticker)
-        news_list= {}
+        news_list = {}
         for ticker in ticker_list:
             news_list[ticker] = yf.Ticker(ticker).news
             # print(yf.Ticker(ticker))
         return news_list
 
     def get_profits_from_holdings(self):
-        holdings = CurrentHoldingService.get_all_holdings()
-        ticker_list = [holding.ticker for holding in holdings]
-        price_data = self.get_stock_data(tickers=ticker_list)
-        profits = []
-        for i in range(len(holdings)):
-            profit = holdings[i].avg_buy_price - price_data[i].current_price
-            profits.append(profit)
-        return profits
+        try:
+            current_holdings = CurrentHoldingService.get_all_holdings()
+            previous_holdings = PreviousHoldingService.get_all_holdings()
+            current_ticker_list = [holding.ticker for holding in current_holdings]
+            previous_ticker_list = [holding.ticker for holding in previous_holdings]
+            price_data = self.get_stock_data(tickers=current_ticker_list)
+            unrealised_profits = []
+            current_values = []
+            realised_profits = []
+            sale_prices = []
+            for i in range(len(current_holdings)):
+                unrealised_profit = current_holdings[i].avg_buy_price - price_data[i].current_price
+                unrealised_profits.append(unrealised_profit * current_holdings[i].qty)
+                current_values.append(price_data[i].current_price)
 
-
+            for i in range(len(previous_holdings)):
+                realised_profit = previous_holdings[i].avg_sell_price - previous_holdings[i].avg_buy_price
+                realised_profits.append(realised_profit * previous_holdings[i].qty)
+                sale_prices.append(
+                    (previous_holdings[i].avg_sell_price * previous_holdings[i]) * previous_holdings[i].qty)
+            return {
+                'current_holdings': current_holdings,
+                'realised_profits': realised_profits,
+                'current_values': current_values,
+                'previous_holdings': previous_holdings,
+                'unrealised_profits': unrealised_profits,
+                'sale_prices': sale_prices,
+                'timestamp': datetime.datetime.now(),
+            }
+        except Exception as err:
+            print(err)
+            return {}
 
 
 if __name__ == '__main__':
     pds = PriceDataService()
+    print(pds.get_profits_from_holdings())
     # pds.get_nse_stock_history('MSFT',)
     # print(pds.get_nse_stock_data("a"))
     # print(yf.Ticker('MSFT').info)
     # pds.get_news_from_holdings()
-    print(pds.get_nse_stock_history('ZOMATO.NS','1d','90m').to_dict())
+    # print(pds.get_nse_stock_history('ZOMATO.NS','1d','90m').to_dict())
     # print(pds.get_nse_stock_data(start=0, end=20))
     # print(yf.Ticker('AAPL').news)
