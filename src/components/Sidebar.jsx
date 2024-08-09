@@ -13,6 +13,7 @@ const Sidebar = () => {
       <div className="nav-buttons">
         <Link to="/" className="nav-button">Holdings</Link>
         <Link to="/watchlist" className="nav-button">Watchlist</Link>
+        <Link to="/transactions" className="nav-button">Transactions</Link>
         <Link to="/stocks" className="nav-button">Stocks</Link>
       </div>
     </div>

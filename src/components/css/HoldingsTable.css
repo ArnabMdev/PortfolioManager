@@ -1,20 +1,94 @@
-.table-container {
-  margin-left: 20px;
+/* Watchlist.css */
+
+.holdings-container {
   padding: 20px;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.heading h2 {
+  font-size: 2rem;
+  color: #333;
+}
+
+.table-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Make sure the table container takes up full width */
+  box-sizing: border-box; /* Ensure padding is included in width */
 }
 
 .holdings-table {
   width: 100%;
-  border-collapse: collapse;
+    border-collapse: collapse;
+    margin: 0 auto;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .holdings-table th,
-.holdings-table td {
-  border: 1px solid black;
-  padding: 12px;
+.holdings-table td{
+  padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-size: 1rem;
 }
 
 .holdings-table th {
-  background-color: rgb(122, 195, 243);
-  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+  text-transform: uppercase;
+}
+
+.holdings-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.holdings-table tr:hover {
+  background-color: #e0e0e0;
+}
+
+.holdings-table td {
+  color: #333;
+}
+
+.content {
+  margin-left: 140px;
+  padding: 20px;
+  flex: 1;  
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.quantity-control button {
+  padding: 0px 0px;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 0px;
+  cursor: poiner;
+  font-size: 14px;
+}
+
+.sell-button {
+  padding: 5px 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.sell-button:hover {
+  background-color: #e43e3e;
 }

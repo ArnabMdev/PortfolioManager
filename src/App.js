@@ -1,26 +1,26 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
 import HoldingsTable from './components/HoldingsTable';
 import Watchlist from './components/Watchlist';
-import Sidebar from './components/Sidebar';
+import Transactions from './components/Transactions';
 import './App.css';
 
-function App() {
+const App = () => {
   return (
     <Router>
-      <div className="App">
+      <div className="app">
         <Sidebar />
         <div className="content">
           <Routes>
             <Route path="/" element={<HoldingsTable />} />
             <Route path="/watchlist" element={<Watchlist />} />
-            {/* You can add the Stocks page later */}
-            <Route path="/stocks" element={<div>Stocks Page (Coming Soon)</div>} />
+            <Route path="/transactions" element={<Transactions />} />
           </Routes>
         </div>
       </div>
     </Router>
   );
-}
+};
 
 export default App;
