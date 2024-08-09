@@ -9,7 +9,7 @@ price_data_service = PriceDataService()
 @bp.route('/', methods=['GET'])
 def get_stock_news():
     try:
-        stock_news = price_data_service.get_news_from_holdings()
+        stock_news = price_data_service.get_news_from_watchlist()
         if stock_news is not None:
             response = jsonify(stock_news)
             response.headers.add('Access-Control-Allow-Origin', '*')
