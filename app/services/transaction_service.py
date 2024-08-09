@@ -28,7 +28,25 @@ class TransactionService:
             new_transaction = Transaction(**data)
             current_holdings = CurrentHoldingService.get_holdings_by_ticker(new_transaction.ticker)
             previous_holdings = PreviousHoldingService.get_holdings_by_ticker(new_transaction.ticker)
-            if new_transaction.txn_type == 'buy':
+            if new_transaction.txn_type == 'mutual_fund':
+                CurrentHoldingService.create_holding({
+                    'user_id': 'user1',
+                    'stock_name': new_transaction.stock_name,
+                    'ticker': new_transaction.ticker,
+                    'asset_type': 'Mutual Fund',
+                    'qty': new_transaction.qty,
+                    'avg_buy_price': new_transaction.price_rate,
+                })
+            elif new_transaction.txn_type == 'add_cash':
+                CurrentHoldingService.create_holding({
+                    'user_id': 'user1',
+                    'stock_name': 'Cash',
+                    'ticker': 'Cash',
+                    'asset_type': 'Cash',
+                    'qty': 1,
+                    'avg_buy_price': new_transaction.price_rate,
+                })
+            elif new_transaction.txn_type == 'buy':
                 if len(current_holdings) == 0:
                     CurrentHoldingService.create_holding({
                         'user_id': 'user1',
