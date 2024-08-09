@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify, request
+from flask_cors import cross_origin
+
 from app.models.user import User
 from app.services.user_service import UserService
 from app import db
@@ -49,6 +51,7 @@ def update_user(id):
 
 
 @bp.route('/<int:id>', methods=['DELETE'])
+@cross_origin('*')
 def delete_user(id):
     if user_service.delete_user(id):
         response = jsonify({'msg': 'User successfully deleted'})

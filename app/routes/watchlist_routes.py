@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify, request
+from flask_cors import cross_origin
+
 from app.services.watchlist_service import WatchlistService
 
 bp = Blueprint('watchlist', __name__, url_prefix='/api/watchlist')
@@ -31,6 +33,7 @@ def get_watchlist_item(ticker):
 
 
 @bp.route('', methods=['POST'])
+@cross_origin('*')
 def add_to_watchlist():
     try:
         data = request.json
@@ -46,6 +49,7 @@ def add_to_watchlist():
 
 
 @bp.route('/<string:ticker>', methods=['DELETE'])
+@cross_origin('*')
 def remove_from_watchlist(ticker):
     try:
         WatchlistService.remove_from_watchlist(ticker)
