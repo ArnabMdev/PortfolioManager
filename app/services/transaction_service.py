@@ -42,7 +42,7 @@ class TransactionService:
                     CurrentHoldingService.update_avg_buy_price(new_transaction.ticker, new_transaction.qty,
                                                                new_transaction.price_rate)
             elif new_transaction.txn_type == 'sell':
-                if len(current_holdings) < new_transaction.qty:
+                if current_holdings[0].qty < new_transaction.qty:
                     raise Exception("Inadequate number of stocks to sell")
                 if len(previous_holdings) == 0:
                     PreviousHoldingService.create_holding({
