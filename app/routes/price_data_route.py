@@ -14,6 +14,7 @@ def get_price_data(start):
         if len(price_data_list) > 0:
             response = jsonify([price_data.to_dict() for price_data in price_data_list])
             response.headers.add('Access-Control-Allow-Origin', '*')
+            return response
         return jsonify({'error': 'failed to fetch stock data'}), 404
     except FileNotFoundError:
         return "CSV file not found"

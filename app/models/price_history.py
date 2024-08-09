@@ -1,3 +1,4 @@
+
 import datetime
 class PriceHistory:
     def __init__(self, open=[], close=[], high=[], low=[], volume=[], timestamp = datetime.datetime.now()):
