@@ -13,6 +13,7 @@ def get_price_history(ticker, period, interval):
         if price_history is not None:
             response = jsonify({ticker : price_history.to_dict()})
             response.headers.add('Access-Control-Allow-Origin', '*')
+            response.status = 200
         return jsonify({'error': 'No data found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500

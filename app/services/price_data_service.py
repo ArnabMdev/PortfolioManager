@@ -84,6 +84,7 @@ class PriceDataService:
     def get_nse_stock_history(self, ticker, period, interval):
         try:
             tick = yf.Ticker(ticker, session=self.session)
+            print(tick)
             raw_data = tick.history(period=period, interval=interval)
             price_history = PriceHistory(
                 open=raw_data['Open'].tolist(),
@@ -125,9 +126,10 @@ class PriceDataService:
 
 if __name__ == '__main__':
     pds = PriceDataService()
-    print(pds.get_nse_stock_data("a"))
+    # pds.get_nse_stock_history('MSFT',)
+    # print(pds.get_nse_stock_data("a"))
     # print(yf.Ticker('MSFT').info)
     # pds.get_news_from_holdings()
-    # print(pds.get_nse_stock_history('MSFT','1d','90m').to_dict())
+    print(pds.get_nse_stock_history('ZOMATO.NS','1d','90m').to_dict())
     # print(pds.get_nse_stock_data(start=0, end=20))
     # print(yf.Ticker('AAPL').news)
