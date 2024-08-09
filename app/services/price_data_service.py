@@ -1,5 +1,7 @@
 import datetime
 import os.path
+import random
+
 import yfinance as yf
 import pandas as pd
 
@@ -29,8 +31,8 @@ class PriceDataService:
         try:
             app_root = os.path.dirname(__file__)
             tickers = \
-            pd.read_csv(filepath_or_buffer=os.path.join(app_root, 'StockData.csv', ), index_col=0, header=None)[
-                1].tolist()
+                pd.read_csv(filepath_or_buffer=os.path.join(app_root, 'StockData.csv', ), index_col=0, header=None)[
+                    1].tolist()
             # tickers = ['ZOMATO','TATAMOTORS']
             ticker_list = []
             for tick in tickers:
@@ -64,25 +66,13 @@ class PriceDataService:
             print(err)
             return {}
 
-    def get_stock_data(self, tickers):
+    def get_stock_price_data(self,ticker):
         try:
-            raw_price_data = yf.Tickers(tickers, session=self.session)
-            price_data_list = []
-            for k, v in raw_price_data.tickers.items():
-                if k is None or v is None:
-                    continue
-                # print(v.info)
-                price_data = PriceData(
-                    ticker=k,
-                    stock_name=v.info.get('longName'),
-                    current_price=v.info.get('currentPrice'),
-                    volume=v.info.get('volume'),
-                )
-                price_data_list.append(price_data)
-            return price_data_list
+            raw_price_data = yf.Ticker(ticker, session=self.session)
+            return raw_price_data.info.get('currentPrice')
         except Exception as err:
             print(err)
-            return {}
+            return 100.0
 
     def get_nse_stock_history(self, ticker, period, interval):
         try:
@@ -117,18 +107,31 @@ class PriceDataService:
     def get_profits_from_holdings(self):
         try:
             current_holdings = CurrentHoldingService.get_all_holdings()
+            equity_holdings = []
+            for holding in current_holdings:
+                if holding.asset_type == 'Equity':
+                    equity_holdings.append(holding)
             previous_holdings = PreviousHoldingService.get_all_holdings()
-            current_ticker_list = [holding.ticker for holding in current_holdings]
+            current_ticker_list = [holding.ticker for holding in equity_holdings]
             previous_ticker_list = [holding.ticker for holding in previous_holdings]
-            price_data = self.get_stock_data(tickers=current_ticker_list)
             unrealised_profits = []
             current_values = []
             realised_profits = []
             sale_prices = []
             for i in range(len(current_holdings)):
-                unrealised_profit = price_data[i].current_price - current_holdings[i].avg_buy_price
-                unrealised_profits.append(unrealised_profit * current_holdings[i].qty)
-                current_values.append(price_data[i].current_price)
+                if current_holdings[i].asset_type == 'Cash':
+                    unrealised_profits.append(0)
+                    current_values.append(current_holdings[i].avg_buy_price)
+                elif current_holdings[i].asset_type == 'Mutual Fund':
+                    profit_percent = random.randrange(1, 50)/100
+                    profit = profit_percent * current_holdings[i].avg_buy_price
+                    unrealised_profits.append(profit)
+                    current_values.append(current_holdings[i].avg_buy_price + profit)
+                elif current_holdings[i].asset_type == 'Equity':
+                    current_price = yf.Ticker(current_holdings[i].ticker, session=self.session).info.get('currentPrice')
+                    unrealised_profit = current_price - current_holdings[i].avg_buy_price
+                    unrealised_profits.append(unrealised_profit * current_holdings[i].qty)
+                    current_values.append(current_price)
 
             for i in range(len(previous_holdings)):
                 realised_profit = previous_holdings[i].avg_sell_price - previous_holdings[i].avg_buy_price

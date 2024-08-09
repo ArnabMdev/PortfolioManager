@@ -53,7 +53,7 @@ class TransactionService:
                         'stock_name': new_transaction.stock_name,
                         'ticker': new_transaction.ticker,
                         'asset_type': 'Equity',
-                        'qty': new_transaction.qty,
+                        'qty': 1,
                         'avg_buy_price': new_transaction.price_rate,
                     })
                 else:
