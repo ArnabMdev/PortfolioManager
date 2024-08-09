@@ -5,9 +5,9 @@ class Transaction(db.Model):
     __tablename__ = 'transactions'
 
     txn_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    ticker = db.Column(db.String(20), nullable=False)
+    ticker = db.Column(db.String(255), nullable=False)
     stock_name = db.Column(db.String(255), nullable=False)
-    txn_type = db.Column(db.String(10), nullable=False, default="buy")
+    txn_type = db.Column(db.String(50), nullable=False, default="buy")
     qty = db.Column(db.Float, nullable=False, default=0)
     price_rate = db.Column(db.Float, nullable=False, default=0)
     txn_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
