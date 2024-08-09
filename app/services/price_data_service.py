@@ -126,7 +126,7 @@ class PriceDataService:
             realised_profits = []
             sale_prices = []
             for i in range(len(current_holdings)):
-                unrealised_profit = current_holdings[i].avg_buy_price - price_data[i].current_price
+                unrealised_profit = price_data[i].current_price - current_holdings[i].avg_buy_price
                 unrealised_profits.append(unrealised_profit * current_holdings[i].qty)
                 current_values.append(price_data[i].current_price)
 
@@ -134,12 +134,13 @@ class PriceDataService:
                 realised_profit = previous_holdings[i].avg_sell_price - previous_holdings[i].avg_buy_price
                 realised_profits.append(realised_profit * previous_holdings[i].qty)
                 sale_prices.append(
-                    (previous_holdings[i].avg_sell_price * previous_holdings[i]) * previous_holdings[i].qty)
+                    (previous_holdings[i].avg_sell_price * previous_holdings[i].qty)
+                )
             return {
-                'current_holdings': current_holdings,
+                'current_holdings': current_ticker_list,
                 'realised_profits': realised_profits,
                 'current_values': current_values,
-                'previous_holdings': previous_holdings,
+                'previous_holdings': previous_ticker_list,
                 'unrealised_profits': unrealised_profits,
                 'sale_prices': sale_prices,
                 'timestamp': datetime.datetime.now(),
