@@ -11,7 +11,10 @@ def get_stock_news():
     try:
         stock_news = price_data_service.get_news_from_holdings()
         if stock_news is not None:
-            return jsonify(stock_news)
+            response = jsonify(stock_news)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            response.status = 200
+            return response
         return jsonify({'error': 'No news found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500

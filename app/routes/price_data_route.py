@@ -14,6 +14,7 @@ def get_price_data(start):
         if len(price_data_list) > 0:
             response = jsonify([price_data.to_dict() for price_data in price_data_list])
             response.headers.add('Access-Control-Allow-Origin', '*')
+            response.status = 200
             return response
         return jsonify({'error': 'failed to fetch stock data'}), 404
     except FileNotFoundError:
@@ -26,7 +27,10 @@ def get_default_price_data():
         price_data_list = price_data_service.get_nse_stock_data("a")
         print(price_data_list)
         if len(price_data_list) > 0:
-            return jsonify([price_data.to_dict() for price_data in price_data_list])
+            response = jsonify([price_data.to_dict() for price_data in price_data_list])
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            response.status = 200
+            return response
         return jsonify({'error': 'failed to fetch stock data'}), 404
     except FileNotFoundError:
         return "CSV file not found"
@@ -36,7 +40,10 @@ def get_default_price_data():
 def get_stock_list():
     stock_list = price_data_service.get_nse_stock_list()
     if len(stock_list) > 0:
-        return jsonify(stock_list)
+        response = jsonify(stock_list)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.status = 200
+        return response
     return jsonify({'error': 'failed to fetch stock data'}), 500
 
 
@@ -45,7 +52,10 @@ def get_profits():
     try:
         profits = price_data_service.get_profits_from_holdings()
         if len(profits) > 0:
-            return jsonify(profits), 200
+            response = jsonify(profits)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            response.status = 200
+            return response
         return jsonify({'error': 'No profits to fetch'}), 404
     except Exception as err:
         return jsonify({'error': str(err)}), 500

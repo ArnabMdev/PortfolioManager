@@ -30,7 +30,9 @@ def create_transaction():
     try:
         data = request.json
         new_transaction = TransactionService.create_transaction(data)
-        return jsonify(new_transaction.to_dict()), 201
+        response = jsonify(new_transaction.to_dict())
+        response.status = 201
+        return response
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -39,7 +41,10 @@ def create_transaction():
 def get_transactions_by_ticker(ticker):
     try:
         transactions = TransactionService.get_transactions_by_ticker(ticker)
-        return jsonify([t.to_dict() for t in transactions]), 200
+        response = jsonify([t.to_dict() for t in transactions])
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.status = 200
+        return response
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -55,7 +60,10 @@ def get_transactions_by_date_range():
         end_date = datetime.fromisoformat(end_date)
         
         transactions = TransactionService.get_transactions_by_date_range(start_date, end_date)
-        return jsonify([t.to_dict() for t in transactions]), 200
+        response = jsonify([t.to_dict() for t in transactions])
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.status = 200
+        return response
     except ValueError:
         return jsonify({"error": "Invalid date format. Use ISO format (YYYY-MM-DD)"}), 400
     except Exception as e:
