@@ -144,9 +144,9 @@ const HoldingsTable = () => {
                 <td>₹{holding.avg_price.toFixed(2)}</td>
                 <td>
                   <div className="quantity-control">
-                    <button onClick={() => handleDecrement(index)}>-</button>
+                    <button style={{backgroundColor: 'grey', borderRadius: 20}} onClick={() => handleDecrement(index)}>-</button>
                     <span>{sellingQuantities[index]}</span>
-                    <button onClick={() => handleIncrement(index)}>+</button>
+                    <button style={{backgroundColor: 'grey', borderRadius: 20 }} onClick={() => handleIncrement(index)}>+</button>
                   </div>
                 </td>
                 <td>

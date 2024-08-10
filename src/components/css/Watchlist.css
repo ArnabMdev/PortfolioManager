@@ -2,8 +2,8 @@
 
 .watchlist-container {
   padding: 20px;
-    background-color: #f5f5f5;
-    min-height: 100vh;
+  background-color: #f5f5f5;
+  min-height: 100vh;
 }
 
 .heading {
@@ -16,33 +16,37 @@
   color: #333;
 }
 
+.main-content {
+  display: flex;
+  justify-content: space-between; /* Space between the table and news cards */
+}
+
 .table-container {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  width: 50%;
   box-sizing: border-box; /* Ensure padding is included in width */
 }
 
 .watchlist-table {
   width: 100%;
-    border-collapse: collapse;
-    margin: 0 auto;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .watchlist-table th,
-.watchlist-table td{
+.watchlist-table td {
   padding: 12px 15px;
-    border: 1px solid #ddd;
-    text-align: left;
-    font-size: 1rem;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-size: 1rem;
 }
 
 .watchlist-table th {
-  background-color: #4CAF50;
+  background-color: #4c74af;
   color: white;
   text-transform: uppercase;
 }
@@ -60,9 +64,18 @@
 }
 
 .content {
-  margin-left: 140px;
-  padding: 20px;
+  margin-left: 150px;
+  padding: 20px; 
   flex: 1;  
+}
+
+.news-cards-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 45%;
+  box-sizing: border-box; /* Ensure padding is included in width */
 }
 
 .news-cards {

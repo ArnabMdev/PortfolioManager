@@ -42,7 +42,7 @@
 }
 
 .holdings-table th {
-  background-color: #4CAF50;
+  background-color: #4c74af;
   color: white;
   text-transform: uppercase;
 }
@@ -73,7 +73,7 @@
 
 .quantity-control button {
   padding: 0px 0px;
-  background-color: #e0e0e0;
+  background-color: grey;
   border: none;
   border-radius: 0px;
   cursor: poiner;
@@ -82,7 +82,7 @@
 
 .sell-button {
   padding: 5px 10px;
-  background-color: blue;
+  background-color: grey;
   color: white;
   border: none;
   border-radius: 3px;
