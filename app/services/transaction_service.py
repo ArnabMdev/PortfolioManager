@@ -77,7 +77,7 @@ class TransactionService:
                     PreviousHoldingService.update_avg_sell_price(
                         new_transaction.ticker, new_transaction.qty, new_transaction.price_rate
                     )
-                CurrentHoldingService.update_holding_quantity(new_transaction.ticker, new_transaction.qty)
+                CurrentHoldingService.update_holding_quantity(new_transaction.ticker, -new_transaction.qty)
             db.session.add(new_transaction)
             db.session.commit()
             return new_transaction
