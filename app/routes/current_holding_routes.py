@@ -13,7 +13,8 @@ def get_all_holdings():
         holdings_with_price = []
         for holding in holdings:
             holding_dict = holding.to_dict()
-            holding_dict['current_price'] = pds.get_stock_price_data(ticker=holding_dict.get('ticker'))
+            # holding_dict['current_price'] = pds.get_stock_price_data(ticker=holding_dict.get('ticker'))
+            holding_dict['current_price'] = 100.0
             holdings_with_price.append(holding_dict)
         return jsonify(holdings_with_price), 200
     except Exception as e:

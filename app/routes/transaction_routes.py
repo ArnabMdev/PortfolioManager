@@ -25,13 +25,13 @@ def get_transaction(txn_id):
         return jsonify({"error": str(e)}), 500
 
 @bp.route('', methods=['POST'])
-@cross_origin('*')
+@cross_origin()
 def create_transaction():
     try:
         data = request.json
         new_transaction = TransactionService.create_transaction(data)
         response = jsonify(new_transaction.to_dict())
-        response.status = 201
+        response.status = 200
         return response
     except Exception as e:
         return jsonify({"error": str(e)}), 500

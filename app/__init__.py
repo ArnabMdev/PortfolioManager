@@ -21,11 +21,11 @@ SWAGGER_BLUEPRINT= get_swaggerui_blueprint(
 
 def create_app():
     app = Flask(__name__)
-    CORS(app)
     app.config.from_object(Config)
 
     db.init_app(app)
     migrate.init_app(app, db)
+    CORS(app)
 
     from .routes import (user_routes, transaction_routes, current_holding_routes, previous_holding_routes,
                          price_data_route, transaction_routes, price_history_route, stock_news, watchlist_routes)
