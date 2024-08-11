@@ -80,8 +80,10 @@ class PriceDataService:
             tick = yf.Ticker(ticker, session=self.session)
             print(tick)
             current_price = tick.info.get('currentPrice')
+            stock_name = tick.info.get('longName') if tick.info.get('longName') else tick.info.get('shortName')
             raw_data = tick.history(period=period, interval=interval)
             price_history = PriceHistory(
+                stock_name=stock_name,
                 open=raw_data['Open'].tolist(),
                 high=raw_data['High'].tolist(),
                 low=raw_data['Low'].tolist(),

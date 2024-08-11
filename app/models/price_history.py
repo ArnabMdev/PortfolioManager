@@ -1,8 +1,9 @@
 
 import datetime
 class PriceHistory:
-    def __init__(self, open=[], close=[], high=[], low=[], volume=[], current_price =0, timestamp = datetime.datetime.now()):
+    def __init__(self, open=[], stock_name = "", close=[], high=[], low=[], volume=[], current_price =0, timestamp = datetime.datetime.now()):
         self.__open = open
+        self.__stock_name = stock_name
         self.__close = close
         self.__high = high
         self.__low = low
@@ -60,6 +61,7 @@ class PriceHistory:
 
     def to_dict(self):
         return {
+            'stock_name' : self.__stock_name,
             'open': self.__open,
             'close': self.__close,
             'high': self.__high,
