@@ -79,6 +79,7 @@ class PriceDataService:
         try:
             tick = yf.Ticker(ticker, session=self.session)
             print(tick)
+            current_price = tick.info.get('currentPrice')
             raw_data = tick.history(period=period, interval=interval)
             price_history = PriceHistory(
                 open=raw_data['Open'].tolist(),
@@ -86,6 +87,7 @@ class PriceDataService:
                 low=raw_data['Low'].tolist(),
                 close=raw_data['Close'].tolist(),
                 volume=raw_data['Volume'].tolist(),
+                current_price = current_price,
                 timestamp=raw_data.index.tolist()
             )
             return price_history

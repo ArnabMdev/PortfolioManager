@@ -1,12 +1,13 @@
 
 import datetime
 class PriceHistory:
-    def __init__(self, open=[], close=[], high=[], low=[], volume=[], timestamp = datetime.datetime.now()):
+    def __init__(self, open=[], close=[], high=[], low=[], volume=[], current_price =0, timestamp = datetime.datetime.now()):
         self.__open = open
         self.__close = close
         self.__high = high
         self.__low = low
         self.__volume = volume
+        self.__current_price = current_price
         self.__timestamp = timestamp
 
     @property
@@ -64,6 +65,7 @@ class PriceHistory:
             'high': self.__high,
             'low': self.__low,
             'volume': self.__volume,
+            'current_price' : self.__current_price,
             'timestamp': self.__timestamp
 
         }
