@@ -60,7 +60,7 @@ const Watchlist = () => {
   }, []);
 
   const handleModalSubmit = useCallback((quantity) => {
-    fetch('https://c09d-13-233-161-181.ngrok-free.app/api/transactions', {
+    fetch('https://7d17-13-233-233-6.ngrok-free.app/api/transactions', {
       method: 'POST',
       headers: {
         'Access-Control-Allow-Origin': '*',

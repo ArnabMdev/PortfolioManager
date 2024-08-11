@@ -8,7 +8,7 @@ const HoldingsTable = () => {
 
   useEffect(() => {
     // Fetch current holdings data from the API
-    fetch('https://c09d-13-233-161-181.ngrok-free.app/api/current_holdings/', {
+    fetch('https://7d17-13-233-233-6.ngrok-free.app/api/current_holdings/', {
       method: 'GET',
       headers: new Headers({
         "ngrok-skip-browser-warning": "69420"
@@ -22,7 +22,7 @@ const HoldingsTable = () => {
     .catch(error => console.error('Error fetching current holdings data:', error));
 
     // Fetch previous holdings data from the API
-    fetch('https://c09d-13-233-161-181.ngrok-free.app/api/previous_holdings/', {
+    fetch('https://7d17-13-233-233-6.ngrok-free.app/api/previous_holdings/', {
       method: 'GET',
       headers: new Headers({
         "ngrok-skip-browser-warning": "69420"
@@ -58,7 +58,7 @@ const HoldingsTable = () => {
     const profit = sellingPrice - holding.avg_price * sellingQty; // Calculate profit
 
     // Post to the transactions API
-    fetch('https://c09d-13-233-161-181.ngrok-free.app/api/transactions', {
+    fetch('https://7d17-13-233-233-6.ngrok-free.app/api/transactions', {
       method: 'POST',
       headers: {
         'Access-Control-Allow-Origin': '*',
