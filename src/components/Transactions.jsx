@@ -3,10 +3,11 @@ import './css/Transactions.css';
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
-  const [visibleRows, setVisibleRows] = useState(10); // Initial number of visible rows
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 7;
 
   useEffect(() => {
-    // Fetch current transactions data from the API
+    // Fetch current holdings data from the API
     fetch('https://7d17-13-233-233-6.ngrok-free.app/api/transactions', {
       method: 'GET',
       headers: new Headers({
@@ -14,15 +15,22 @@ const Transactions = () => {
       })
     })
     .then(response => response.json())
-    .then(data => {
-      setTransactions(data);
-    })
-    .catch(error => console.error('Error fetching transactions data:', error));
+      .then(data => {
+        setTransactions(data);
+      })
+      .catch(error => console.error('Error fetching transactions data:', error));
   }, []);
 
-  const handleLoadMore = () => {
-    setVisibleRows(transactions.length); // Show all rows
-  };
+  // Calculate the transactions to display on the current page
+  const indexOfLastTransaction = currentPage * rowsPerPage;
+  const indexOfFirstTransaction = indexOfLastTransaction - rowsPerPage;
+  const currentTransactions = transactions.slice(indexOfFirstTransaction, indexOfLastTransaction);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(transactions.length / rowsPerPage);
 
   return (
     <div className="transactions-container">
@@ -41,23 +49,33 @@ const Transactions = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.slice(0, visibleRows).map((transaction, index) => (
-                <tr key={index}>
-                  <td>{transaction.ticker}</td>
-                  <td>{transaction.txn_type}</td>
-                  <td>{transaction.qty}</td>
-                  <td>₹{transaction.price_rate.toFixed(2)}</td>
+              {currentTransactions.length > 0 ? (
+                currentTransactions.map((transaction, index) => (
+                  <tr key={index}>
+                    <td>{transaction.ticker}</td>
+                    <td>{transaction.txn_type}</td>
+                    <td>{transaction.qty}</td>
+                    <td>₹{transaction.price_rate.toFixed(2)}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4">No transaction data available</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
-          {visibleRows < transactions.length && (
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-              <button onClick={handleLoadMore} className="load-more-button">
-                Load More
+          <div className="pagination">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => paginate(index + 1)}
+                className={currentPage === index + 1 ? 'active' : ''}
+              >
+                {index + 1}
               </button>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
       </div>
     </div>
