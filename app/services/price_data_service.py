@@ -35,8 +35,9 @@ class PriceDataService:
             # tickers = ['ZOMATO','TATAMOTORS']
             ticker_list = []
             for tick in tickers:
-                if tick.startswith(starts_with):
+                if tick.startswith(starts_with.upper()):
                     ticker_list.append(str(tick) + str('.NS'))
+            print(ticker_list)
             return ticker_list
         except Exception as err:
             print(err)
