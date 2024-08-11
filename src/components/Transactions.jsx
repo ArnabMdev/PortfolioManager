@@ -32,6 +32,105 @@ const Transactions = () => {
   // Calculate total pages
   const totalPages = Math.ceil(transactions.length / rowsPerPage);
 
+  // Function to generate pagination numbers
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const maxButtons = 5; // Maximum number of pagination buttons to show
+
+    if (totalPages <= maxButtons) {
+      for (let i = 1; i <= totalPages; i++) {
+        buttons.push(
+          <button
+            key={i}
+            onClick={() => paginate(i)}
+            className={currentPage === i ? 'active' : ''}
+          >
+            {i}
+          </button>
+        );
+      }
+    } else {
+      if (currentPage <= maxButtons - 2) {
+        for (let i = 1; i <= maxButtons - 1; i++) {
+          buttons.push(
+            <button
+              key={i}
+              onClick={() => paginate(i)}
+              className={currentPage === i ? 'active' : ''}
+            >
+              {i}
+            </button>
+          );
+        }
+        buttons.push(<span key="dots">...</span>);
+        buttons.push(
+          <button
+            key={totalPages}
+            onClick={() => paginate(totalPages)}
+            className={currentPage === totalPages ? 'active' : ''}
+          >
+            {totalPages}
+          </button>
+        );
+      } else if (currentPage > maxButtons - 2 && currentPage < totalPages - 2) {
+        buttons.push(
+          <button
+            key={1}
+            onClick={() => paginate(1)}
+            className={currentPage === 1 ? 'active' : ''}
+          >
+            1
+          </button>
+        );
+        buttons.push(<span key="dots1">...</span>);
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          buttons.push(
+            <button
+              key={i}
+              onClick={() => paginate(i)}
+              className={currentPage === i ? 'active' : ''}
+            >
+              {i}
+            </button>
+          );
+        }
+        buttons.push(<span key="dots2">...</span>);
+        buttons.push(
+          <button
+            key={totalPages}
+            onClick={() => paginate(totalPages)}
+            className={currentPage === totalPages ? 'active' : ''}
+          >
+            {totalPages}
+          </button>
+        );
+      } else {
+        buttons.push(
+          <button
+            key={1}
+            onClick={() => paginate(1)}
+            className={currentPage === 1 ? 'active' : ''}
+          >
+            1
+          </button>
+        );
+        buttons.push(<span key="dots">...</span>);
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          buttons.push(
+            <button
+              key={i}
+              onClick={() => paginate(i)}
+              className={currentPage === i ? 'active' : ''}
+            >
+              {i}
+            </button>
+          );
+        }
+      }
+    }
+    return buttons;
+  };
+
   return (
     <div className="transactions-container">
       <div className="content">
@@ -66,15 +165,7 @@ const Transactions = () => {
             </tbody>
           </table>
           <div className="pagination">
-            {Array.from({ length: totalPages }, (_, index) => (
-              <button
-                key={index + 1}
-                onClick={() => paginate(index + 1)}
-                className={currentPage === index + 1 ? 'active' : ''}
-              >
-                {index + 1}
-              </button>
-            ))}
+            {renderPaginationButtons()}
           </div>
         </div>
       </div>
