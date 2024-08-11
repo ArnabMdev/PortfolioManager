@@ -165,7 +165,7 @@ const HoldingsTable = () => {
       </table>
 
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <h2>Previous Holdings</h2>
+        <h2 style={{marginTop: 100}}>Previous Holdings</h2>
       </div>
       <table className="holdings-table">
         <thead>

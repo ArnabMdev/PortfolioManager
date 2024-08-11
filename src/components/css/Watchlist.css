@@ -26,12 +26,13 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 50%;
+  width: 55%; /* Increase the width of the table container */
   box-sizing: border-box; /* Ensure padding is included in width */
 }
 
+/* Adjust table width */
 .watchlist-table {
-  width: 100%;
+  width: 100%; /* Ensure table takes full width of container */
   border-collapse: collapse;
   background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -70,24 +71,35 @@
 }
 
 .news-cards-container {
+  margin-left: 10%;
   background-color: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 45%;
+  width: 40%; /* Reduce the width of the news cards container */
   box-sizing: border-box; /* Ensure padding is included in width */
 }
 
-.news-cards {
-  margin-top: 20px;
-}
-
-.news-section {
-  margin-bottom: 20px;
-}
-
+/* News cards */
 .news-card {
   border: 1px solid #ddd;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 8px; /* Slightly reduce padding */
+  margin-bottom: 8px; /* Slightly reduce margin */
+  font-size: 0.9rem; /* Slightly reduce the font size */
+}
+
+.news-card h3 {
+  font-size: 1.1rem; /* Slightly reduce the font size of the heading */
+}
+
+.news-card h4 {
+  font-size: 0.9rem; /* Slightly reduce the font size of the subheading */
+}
+
+.news-card p {
+  font-size: 0.8rem; /* Slightly reduce the font size of the paragraph text */
+}
+
+.news-card a {
+  font-size: 0.8rem; /* Slightly reduce the font size of the link */
 }
