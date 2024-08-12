@@ -1,3 +1,5 @@
+from flask_cors import cross_origin
+
 from app import db
 from app.models.watchlist import Watchlist
 from app.services.price_data_service import PriceDataService
@@ -31,6 +33,7 @@ class WatchlistService:
             raise Exception(f"Failed to retrieve watchlist item: {str(e)}")
 
     @staticmethod
+    @cross_origin()
     def add_to_watchlist(ticker):
         try:
             existing_item = Watchlist.query.filter_by(ticker=ticker).first()
